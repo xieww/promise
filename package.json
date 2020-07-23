@@ -5,7 +5,7 @@
   "type": "moudle",
   "main": "index.js",
   "scripts": {
-    "test": "mocha index.test.js"
+    "test": "mocha ./test/index.test.js"
   },
   "keywords": [
     "Promise"

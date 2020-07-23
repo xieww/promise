@@ -1,4 +1,4 @@
-const Promise = require('./index.js');
+const Promise = require('../src/index.js');
 
 module.exports = {
   deferred: function () {
