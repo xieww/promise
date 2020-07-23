@@ -282,13 +282,13 @@ Promise.race = function Race(params) {
   });
 };
 
-Promise.defer = Promise.deferred = function () {
-  let dfd = {};
-  dfd.promise = new Promise((resolve, reject) => {
-    dfd.resolve = resolve;
-    dfd.reject = reject;
-  });
-  return dfd;
-};
+// Promise.deferred = function () {
+//   let defer = {};
+//   defer.promise = new Promise((resolve, reject) => {
+//     defer.resolve = resolve;
+//     defer.reject = reject;
+//   });
+//   return defer;
+// };
 
 module.exports = Promise;

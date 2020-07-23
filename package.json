@@ -5,7 +5,7 @@
   "type": "moudle",
   "main": "index.js",
   "scripts": {
-    "test": "promises-aplus-tests index.js"
+    "test": "mocha index.test.js"
   },
   "keywords": [
     "Promise"
@@ -13,6 +13,8 @@
   "author": "xieww",
   "license": "ISC",
   "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^8.0.1",
     "promises-aplus-tests": "^2.1.2"
   }
 }
