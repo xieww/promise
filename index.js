@@ -14,11 +14,12 @@ function Promise(executor) {
   self.onFulfilled = []; // 成功的回调
   self.onRejected = []; // 失败的回调
 
+  //PromiseA+ 2.1
   function resolve(value) {
     if (self.status === PENDING) {
       self.status = FULFILLED;
       self.value = value;
-      self.onFulfilled.forEach((fn = fn())); //PromiseA+ 2.2.6.1
+      self.onFulfilled.forEach((fn) => fn()); //PromiseA+ 2.2.6.1
     }
   }
 
@@ -26,7 +27,7 @@ function Promise(executor) {
     if (self.status === PENDING) {
       self.status = REJECTED;
       self.reason = reason;
-      self.onRejected.forEach((fn = fn())); //PromiseA+ 2.2.6.2
+      self.onRejected.forEach((fn) => fn()); //PromiseA+ 2.2.6.2
     }
   }
 
@@ -44,7 +45,7 @@ function resolvePromise(pro, x, resolve, reject) {
     reject(new TypeError("Chaining cycle"));
   }
 
-  if ((x && typeof x === "function") || typeof x === "object") {
+  if ((x && typeof x === "object") || typeof x === "function") {
     let used; //PromiseA+2.3.3.3.3 只能调用一次
     try {
       let then = x.then;
@@ -98,13 +99,18 @@ function resolvePromise(pro, x, resolve, reject) {
  * @param {*} onFulfilled
  * @param {*} onRejected
  */
-function Then(onFulfilled, onRejected) {
+Promise.prototype.then = function (onFulfilled, onRejected) {
   let self = this;
 
   //PromiseA+ 2.2.1 / PromiseA+ 2.2.5 / PromiseA+ 2.2.7.3 / PromiseA+ 2.2.7.4
   onFulfilled =
     typeof onFulfilled === "function" ? onFulfilled : (value) => value;
-  onRejected = typeof onRejected === "function" ? onRejected : (value) => value;
+  onRejected =
+    typeof onRejected === "function"
+      ? onRejected
+      : (reason) => {
+          throw reason;
+        };
 
   //PromiseA+ 2.2.7
   const tmpPromise = new Promise((resolve, reject) => {
@@ -112,7 +118,7 @@ function Then(onFulfilled, onRejected) {
       self.onFulfilled.push(() => {
         setTimeout(() => {
           try {
-            const x = onRejected(self.reason);
+            const x = onFulfilled(self.value);
             resolvePromise(tmpPromise, x, resolve, reject);
           } catch (error) {
             reject(error);
@@ -130,7 +136,8 @@ function Then(onFulfilled, onRejected) {
           }
         });
       });
-    } else if (self.status === FULFILLED) {
+    }
+    if (self.status === FULFILLED) {
       //PromiseA+ 2.2.2
       //PromiseA+ 2.2.4 --- setTimeout
       setTimeout(() => {
@@ -145,17 +152,17 @@ function Then(onFulfilled, onRejected) {
       //PromiseA+ 2.2.3
       setTimeout(() => {
         try {
-          const x = onRejected(self.value);
+          const x = onRejected(self.reason);
           resolvePromise(tmpPromise, x, resolve, reject);
         } catch (error) {
           reject(error);
         }
       });
     }
-
-    return tmpPromise;
   });
-}
+
+  return tmpPromise;
+};
 
 /**
  * @description 异常捕获
@@ -164,9 +171,9 @@ function Then(onFulfilled, onRejected) {
  * @param {*} onRejected
  * @returns
  */
-function catchError(onRejected) {
+Promise.prototype.catch = function (onRejected) {
   return this.then(null, onRejected);
-}
+};
 
 /**
  * @description 将实例对象状态改为resolved
@@ -175,7 +182,7 @@ function catchError(onRejected) {
  * @param {*} params
  * @returns
  */
-function Resolved(params) {
+Promise.resolve = function (params) {
   if (params instanceof Promise) {
     return params;
   }
@@ -189,7 +196,7 @@ function Resolved(params) {
       resolve(params);
     }
   });
-}
+};
 
 /**
  * @description 将实例对象状态改为rejected
@@ -198,11 +205,11 @@ function Resolved(params) {
  * @param {*} params
  * @returns
  */
-function Rejected(params) {
+Promise.reject = function (params) {
   return new Promise((resolve, reject) => {
     reject(params);
   });
-}
+};
 
 /**
  * @description
@@ -210,7 +217,7 @@ function Rejected(params) {
  * @date 2020-07-22
  * @param {*} callback
  */
-function Finally(callback) {
+Promise.prototype.finally = function Finally(callback) {
   return this.then(
     (value) => Promise.resolve(callback()).then(() => value),
     (error) =>
@@ -218,7 +225,7 @@ function Finally(callback) {
         throw error;
       })
   );
-}
+};
 
 /**
  * @description
@@ -227,7 +234,7 @@ function Finally(callback) {
  * @param {*} params
  * @returns
  */
-function All(params) {
+Promise.all = function (params) {
   return new Promise((resolve, reject) => {
     let index = 0;
     let result = [];
@@ -252,9 +259,9 @@ function All(params) {
       }
     }
   });
-}
+};
 
-function Race(params) {
+Promise.race = function Race(params) {
   return new Promise((resolve, reject) => {
     if (params.length === 0) {
       return;
@@ -273,15 +280,7 @@ function Race(params) {
       }
     }
   });
-}
-
-Promise.prototype.then = Then;
-Promise.prototype.catch = catchError;
-Promise.resolve = Resolved;
-Promise.reject = Rejected;
-Promise.finally = Finally;
-Promise.all = All;
-Promise.race = Race;
+};
 
 Promise.defer = Promise.deferred = function () {
   let dfd = {};
@@ -292,4 +291,4 @@ Promise.defer = Promise.deferred = function () {
   return dfd;
 };
 
-export default Promise;
+module.exports = Promise;
