@@ -261,6 +261,13 @@ Promise.all = function (params) {
   });
 };
 
+/**
+ * @description
+ * @author xieww
+ * @date 2020-07-23
+ * @param {*} params
+ * @returns
+ */
 Promise.race = function Race(params) {
   return new Promise((resolve, reject) => {
     if (params.length === 0) {
