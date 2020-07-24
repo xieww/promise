@@ -90,7 +90,6 @@ describe("Promise Tests", function () {
         done();
       })
       .catch((error) => {
-        console.log("error", error);
         done();
       });
   });
@@ -111,7 +110,6 @@ describe("Promise Tests", function () {
         done();
       },
       (err) => {
-        console.log(err);
         done();
       }
     );
@@ -133,11 +131,9 @@ describe("Promise Tests", function () {
       }),
     ]).then(
       (data) => {
-        console.log("success ", data);
         done();
       },
       (err) => {
-        console.log("err ", err);
         done();
       }
     );
