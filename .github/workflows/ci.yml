@@ -2,7 +2,7 @@ name: Promise Test coverage
 on:
   push:
     branches:
-      - master
+      - dev
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
