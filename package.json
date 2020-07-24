@@ -1,0 +1,25 @@
+{
+  "name": "promise",
+  "version": "0.0.0",
+  "description": "Promise",
+  "type": "moudle",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha ./test/index.test.js",
+    "cover": "istanbul cover node_modules/mocha/bin/_mocha",
+    "coveralls": "npm run cover -- --report lcovonly && cat ./coverage/lcov.info | coveralls"
+  },
+  "keywords": [
+    "Promise"
+  ],
+  "author": "xieww",
+  "license": "MIT",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "coveralls": "^3.1.0",
+    "istanbul": "^0.4.5",
+    "mocha": "^8.0.1",
+    "promises-aplus-tests": "^2.1.2"
+  },
+  "homepage": "https://github.com/xieww/promise"
+}
