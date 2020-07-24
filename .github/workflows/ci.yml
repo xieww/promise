@@ -14,10 +14,10 @@ jobs:
     - name: Install and Test
       run: |
         npm install
-        npm run cover
+        npm run build
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         BRANCH: gh-pages
-        FOLDER: coverage/lco-report/src
+        FOLDER: coverage/lco-report
