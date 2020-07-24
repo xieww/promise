@@ -9,4 +9,7 @@
   <a href='https://coveralls.io/github/xieww/promise'>
     <img src='https://coveralls.io/repos/github/xieww/promise/badge.svg' alt='Coverage Status' />
   </a>
+  <a href="https://shields.io/category/license">
+  <img alt="GitHub" src="https://img.shields.io/github/license/xieww/promise">
+  </a>
 </p>
