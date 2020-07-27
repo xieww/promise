@@ -13,7 +13,7 @@ jobs:
         persist-credentials: false
     - name: Install and Test
       run: |
-        npm install
+        npm install 
         npm run coveralls
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@releases/v3
