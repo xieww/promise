@@ -7,7 +7,7 @@ describe("Promises/A+ Tests", function () {
   require("promises-aplus-tests").mocha(adapter);
 });
 
-describe("Promise Tests", function () {
+describe("_Promise Tests", function () {
   it("should be resolved?", function (done) {
     var promise = _Promise.resolve(42);
     promise.then(function (value) {
@@ -28,14 +28,14 @@ describe("Promise Tests", function () {
     });
   });
 
-  it("should be a Promise?", function (done) {
+  it("should be a _Promise?", function (done) {
     var promise = _Promise.resolve(
       new _Promise((resolve, reject) => {
-        resolve("Promise");
+        resolve("_Promise");
       })
     );
     promise.then(function (value) {
-      assert(value === "Promise");
+      assert(value === "_Promise");
       done();
     });
   });
