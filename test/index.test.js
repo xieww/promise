@@ -1,6 +1,6 @@
 const { assert, expect } = require("chai");
 const adapter = require("./adapter.spec.js");
-const Promise = require("../src/index.js");
+const _Promise = require("../src/index.js");
 
 // 测试
 describe("Promises/A+ Tests", function () {
@@ -9,7 +9,7 @@ describe("Promises/A+ Tests", function () {
 
 describe("Promise Tests", function () {
   it("should be resolved?", function (done) {
-    var promise = Promise.resolve(42);
+    var promise = _Promise.resolve(42);
     promise.then(function (value) {
       assert(value === 42);
       done();
@@ -17,7 +17,7 @@ describe("Promise Tests", function () {
   });
 
   it("should be a thenable?", function (done) {
-    var promise = Promise.resolve({
+    var promise = _Promise.resolve({
       then: function (resolve, reject) {
         resolve("thenable");
       },
@@ -29,8 +29,8 @@ describe("Promise Tests", function () {
   });
 
   it("should be a Promise?", function (done) {
-    var promise = Promise.resolve(
-      new Promise((resolve, reject) => {
+    var promise = _Promise.resolve(
+      new _Promise((resolve, reject) => {
         resolve("Promise");
       })
     );
@@ -41,7 +41,7 @@ describe("Promise Tests", function () {
   });
 
   it("should be reject", function (done) {
-    var promise = Promise.reject("出错了");
+    var promise = _Promise.reject("出错了");
     if (typeof promise === "object") {
       assert(promise.reason === "出错了");
       done();
@@ -49,7 +49,7 @@ describe("Promise Tests", function () {
   });
 
   it("should be catch", function (done) {
-    var promise = Promise.reject("catch");
+    var promise = _Promise.reject("catch");
     if (typeof promise === "object") {
       promise.catch((error) => {
         assert(error === "catch");
@@ -59,32 +59,32 @@ describe("Promise Tests", function () {
   });
 
   it("should be resolve finally", function (done) {
-    var promise = Promise.resolve("finally");
+    var promise = _Promise.resolve("finally");
     promise.then().finally(() => {
       done();
     });
   });
 
   it("should be reject finally ", function (done) {
-    var promise = Promise.reject("error finally");
+    var promise = _Promise.reject("error finally");
     promise.then().finally(() => {
       done();
     });
   });
 
   it("should be immediately resolved ", function (done) {
-    var promise = Promise.all([]);
+    var promise = _Promise.all([]);
     promise.then(() => {
       done();
     });
   });
 
   it("should be reject ", function (done) {
-    var promise1 = new Promise((resolve, reject) => {
+    var promise1 = new _Promise((resolve, reject) => {
       reject("error");
     });
     var promise2 = 42;
-    var promise = Promise.all([promise1, promise2]);
+    var promise = _Promise.all([promise1, promise2]);
     promise
       .then((res) => {
         done();
@@ -95,16 +95,16 @@ describe("Promise Tests", function () {
   });
 
   it("should be all ([3, 42, 'foo'])", function (done) {
-    var promise1 = new Promise((resolve, reject) => {
+    var promise1 = new _Promise((resolve, reject) => {
       resolve(3);
       done();
     });
     var promise2 = 42;
-    var promise3 = new Promise(function (resolve, reject) {
+    var promise3 = new _Promise(function (resolve, reject) {
       setTimeout(resolve, 100, "foo");
     });
 
-    Promise.all([promise1, promise2, promise3]).then(
+    _Promise.all([promise1, promise2, promise3]).then(
       function (values) {
         assert(JSON.stringify(values) === "[ 3, 42, 'foo' ]");
         done();
@@ -117,14 +117,14 @@ describe("Promise Tests", function () {
 
   /******race*******/
   it("should be race ", function (done) {
-    Promise.race([
-      new Promise((resolve, reject) => {
+    _Promise.race([
+      new _Promise((resolve, reject) => {
         setTimeout(() => {
           resolve(100);
         }, 1000);
       }),
       undefined,
-      new Promise((resolve, reject) => {
+      new _Promise((resolve, reject) => {
         setTimeout(() => {
           reject(100);
         }, 100);
