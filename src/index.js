@@ -45,7 +45,7 @@ function resolvePromise(pro, x, resolve, reject) {
     reject(new TypeError("Chaining cycle"));
   }
 
-  if ((x && typeof x === "object") || typeof x === "function") {
+  if (x && (typeof x === "object" || typeof x === "function")) {
     let used; //PromiseA+2.3.3.3.3 只能调用一次
     try {
       let then = x.then;
