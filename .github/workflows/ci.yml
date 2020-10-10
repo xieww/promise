@@ -2,7 +2,7 @@ name: Promise Test coverage
 on:
   push:
     branches:
-      - master
+      - dev
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -13,11 +13,11 @@ jobs:
         persist-credentials: false
     - name: Install and Test
       run: |
-        npm install
-        npm run build
+        npm install 
+        npm run cover
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@releases/v3
       with:
         ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
         BRANCH: gh-pages
-        FOLDER: coverage/lco-report
+        FOLDER: 'coverage/lcov-report'
