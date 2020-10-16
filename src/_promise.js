@@ -198,6 +198,28 @@ _Promise.all = function (params) {
   });
 };
 
+// _Promise.all = function (params) {
+//   const promises = Array.from(params);
+//   const len = promises.length;
+//   const resultList = new Array(len);
+//   let count = 0;
+//   return new _Promise((resolve, reject) => {
+//     promises.forEach((item, index) => {
+//       _Promise
+//         .resolve(item)
+//         .then((value) => {
+//           // 保存这个promise实例的value
+//           resultList[index] = value;
+//           // 通过计数器，标记是否所有实例均 fulfilled
+//           if (++count === len) {
+//             resolve(resultList);
+//           }
+//         })
+//         .catch(reject);
+//     });
+//   });
+// };
+
 _Promise.race = function (params) {
   return new _Promise((resolve, reject) => {
     if (!params || (params && params.length === 0)) {
@@ -216,6 +238,59 @@ _Promise.race = function (params) {
         );
       }
     }
+  });
+};
+
+// 只要参数实例有一个变成fulfilled状态，包装实例就会变成fulfilled状态；如果所有参数实例都变成rejected状态，包装实例就会变成rejected状态。
+_Promise.any = function (params) {
+  const promises = Array.from(params);
+  const len = promises.length;
+  const rejectedList = new Array(len);
+  let count = 0;
+  return new _Promise((resolve, reject) => {
+    promises.forEach((item, index) => {
+      _Promise
+        .resolve(item)
+        .then((value) => resolve(value))
+        .catch((error) => {
+          rejectedList[index] = error;
+          if (++count === len) {
+            reject(rejectedList);
+          }
+        });
+    });
+  });
+};
+
+function formatSettledResult(result, value) {
+  return result
+    ? { status: FULFILLED, value }
+    : { status: REJECTED, reason: value };
+}
+
+// 只有等到所有这些参数实例都返回结果，不管是fulfilled还是rejected，包装实例才会结束
+_Promise.allSettled = function (params) {
+  const promises = Array.from(params);
+  const len = promise.length;
+  const settledList = new Array(len);
+  let count = 0;
+  return new _Promise((resolve, reject) => {
+    promises.forEach((item, index) => {
+      _Promise
+        .resolve(item)
+        .then((value) => {
+          settledList[index] = formatSettledResult(true, value);
+          if (++count === len) {
+            resolve(settledList);
+          }
+        })
+        .catch((error) => {
+          settledList[index] = formatSettledResult(false, error);
+          if (++count === len) {
+            resolve(settledList);
+          }
+        });
+    });
   });
 };
 
