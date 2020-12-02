@@ -204,7 +204,7 @@ _Promise.all = function (params) {
   const resultList = new Array(len);
   let count = 0;
   return new _Promise((resolve, reject) => {
-    if (!promises.length) {
+    if (!len) {
       resolve(resultList);
     } else {
       promises.forEach((item, index) => {
