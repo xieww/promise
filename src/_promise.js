@@ -224,23 +224,35 @@ _Promise.all = function (params) {
   });
 };
 
+// _Promise.race = function (params) {
+//   const promises = Array.from(params);
+//   return new _Promise((resolve, reject) => {
+//     if (!promises || (promises && promises.length === 0)) {
+//       return;
+//     } else {
+//       for (let i = 0; i < promises.length; i++) {
+//         _Promise.resolve(promises[i]).then(
+//           (res) => {
+//             resolve(res);
+//             return;
+//           },
+//           (error) => {
+//             reject(error);
+//             return;
+//           }
+//         );
+//       }
+//     }
+//   });
+// };
+
 _Promise.race = function (params) {
+  const promises = Array.from(params);
   return new _Promise((resolve, reject) => {
-    if (!params || (params && params.length === 0)) {
+    if (!promises || (promises && promises.length === 0)) {
       return;
     } else {
-      for (let i = 0; i < params.length; i++) {
-        _Promise.resolve(params[i]).then(
-          (res) => {
-            resolve(res);
-            return;
-          },
-          (error) => {
-            reject(error);
-            return;
-          }
-        );
-      }
+      promises.forEach((item) => _Promise.resolve(item).then(resolve, reject));
     }
   });
 };
