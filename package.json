@@ -2,7 +2,7 @@
   "name": "promise",
   "version": "0.0.0",
   "description": "Promise",
-  "type": "moudle",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "test": "mocha ./test/index.test.js",
