@@ -287,7 +287,7 @@ function formatSettledResult(result, value) {
 // 只有等到所有这些参数实例都返回结果，不管是fulfilled还是rejected，包装实例才会结束
 _Promise.allSettled = function (params) {
   const promises = Array.from(params);
-  const len = promise.length;
+  const len = promises.length;
   const settledList = new Array(len);
   let count = 0;
   return new _Promise((resolve, reject) => {
